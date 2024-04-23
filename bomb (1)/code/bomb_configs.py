@@ -97,7 +97,7 @@ def genSerial():
     serial_digits = []
     toggle_value = randint(1, 15)
     # the sum of the digits is the toggle value
-    while (len(serial_digits) < 3 or toggle_value - sum(serial_digits) > 0):
+    while (len(serial_digits) < 5 or toggle_value - sum(serial_digits) > 0):
         d = randint(0, min(9, toggle_value - sum(serial_digits)))
         serial_digits.append(d)
 
