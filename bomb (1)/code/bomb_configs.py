@@ -98,7 +98,7 @@ def genSerial():
     toggle_value = randint(1, 15)
     # the sum of the digits is the toggle value
     while (len(serial_digits) < 5 or toggle_value - sum(serial_digits) > 0):
-        d = randint(0, min(9, toggle_value - sum(serial_digits)))
+        d = randint(0, min(5, toggle_value - sum(serial_digits)))
         serial_digits.append(d)
 
     # set the letters (used in the jumper wires phase)
