@@ -13,6 +13,13 @@ COUNTDOWN = 300      # the initial bomb countdown value (seconds)
 NUM_STRIKES = 5      # the total strikes allowed before the bomb "explodes"
 NUM_PHASES = 4       # the total number of initial active bomb phases
 
+EXPLODE = [ "explosion.gif," ".explosion.mp3" ]
+SUCCESS = [ "success.png", "congratulations.mp3" ]
+EXPLODING = "./audio/exploding.mp3"
+STRIKE = "wrong.mp3"
+DEFUSED = "./audio/defused.mp3"
+TICK = "./audio/tick.mp3"
+
 # imports
 from random import randint, shuffle, choice
 from string import ascii_uppercase
