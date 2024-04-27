@@ -5,9 +5,9 @@
 #################################
 
 # import the configs
-from bomb_configs import *
+from Gourd_bomb_configs import *
 # import the phases
-from bomb_phases import *
+from Gourd_bomb_phases import *
 
 ###########
 # functions

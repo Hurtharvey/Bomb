@@ -5,7 +5,7 @@
 #################################
 
 # import the configs
-from bomb_configs import *
+from Gourd_bomb_configs import *
 # other imports
 from tkinter import *
 import tkinter
