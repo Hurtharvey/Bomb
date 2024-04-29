@@ -139,7 +139,56 @@ class PhaseThread(Thread):
         self._value = None
         # phase threads are either running or not
         self._running = False
+class NumericPhase(PhaseThread):
+    def __init__(self, name, component=None, target=None, display_length=0):
+        super().__init__(name, component, target)
 
+        self._value = self._get_int_state()
+
+        self._prev_value = self._value
+
+        self._display_length = display_length
+
+    def run(self):
+        self._running = True
+        while (self._running):
+
+            self._value = self._get_int_state()
+
+            if self._value == self._target:
+                self._defused = True
+
+            elif self._value != self._prev_value:
+
+                if not self._check_state():
+                    self._failed = True
+
+                self._prev_value = self._value
+            sleep(0.1)
+
+    def _check_state(self):
+
+        states = self._get_bool_state()
+        prev_states = [bool(int(c)) for c in bin(self._prev_value)[2:].zfill(self._display_length)]
+        valid_states = [bool(int(c)) for c in bin(self._target)[2:].zfill(self._display_length)]
+
+        for i in range(len(states)):
+
+            if (states[i] != prev_states[i] and states[i] != valid_states[i]):
+                return False
+            return True
+
+    def _get_bool_state(self):
+        return [pin.value for pin in self._component]
+
+    def _get_int_state(self):
+        return int("".join([str(int(n)) for n in self._get_bool_state() ]), 2)
+
+    def __str__(self):
+        if self._defused:
+            return "DEFUSED"
+        else:
+            return "".join([chr(int(i)+65) if pin.value == 0 else "." for i, pin in enumerate(self._component)])
 # the timer phase
 class Timer(PhaseThread):
     def __init__(self, component, initial_value, name="Timer"):
@@ -227,21 +276,14 @@ class Keypad(PhaseThread):
 
 # the jumper wires phase
 class Wires(PhaseThread):
-    def __init__(self, component, target, name="Wires"):
-        super().__init__(name, component, target)
+    def __init__(self, component, target, display_length, name="Wires"):
+        super().__init__(name, component, target, display_length)
 
-    # runs the thread
-    def run(self):
-        # TODO
-        pass
-
-    # returns the jumper wires state as a string
-    def __str__(self):
-        if (self._defused):
-            return "DEFUSED"
-        else:
-            # TODO
-            pass
+        def __str__(self):
+            if (self._defused):
+                return "DEFUSED"
+            else:
+                return f"{bin(self._value)[2:].zfill(self._display_length)}/{self._value}"
 
 # the pushbutton phase
 class Button(PhaseThread):
@@ -296,18 +338,11 @@ class Button(PhaseThread):
 
 # the toggle switches phase
 class Toggles(PhaseThread):
-    def __init__(self, component, target, name="Toggles"):
-        super().__init__(name, component, target)
+    def __init__(self, component, target, display_length, name="Toggles"):
+        super().__init__(name, component, target, display_length)
 
-    # runs the thread
-    def run(self):
-        # TODO
-        pass
-
-    # returns the toggle switches state as a string
-    def __str__(self):
-        if (self._defused):
-            return "DEFUSED"
-        else:
-            # TODO
-            pass
+        def __str__(self):
+            if self._defused:
+                return "DEFUSED"
+            else:
+                return "".join([chr(int(i) + 65) if pin.value == 0 else "." for i, pin in enumerate(self.component)])

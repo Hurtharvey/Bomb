@@ -9,16 +9,13 @@ DEBUG = False        # debug mode?
 RPi = True           # is this running on the RPi?
 ANIMATE = True       # animate the LCD text?
 SHOW_BUTTONS = False # show the Pause and Quit buttons on the main LCD GUI?
-COUNTDOWN = 300      # the initial bomb countdown value (seconds)
+COUNTDOWN = 120      # the initial bomb countdown value (seconds)
 NUM_STRIKES = 5      # the total strikes allowed before the bomb "explodes"
 NUM_PHASES = 4       # the total number of initial active bomb phases
 
 EXPLODE = [ "explosion1.png," ".explosion.mp3" ]
 SUCCESS = [ "success.png", "congratulations.mp3" ]
-EXPLODING = "./audio/exploding.mp3"
 STRIKE = "wrong.mp3"
-DEFUSED = "./audio/defused.mp3"
-TICK = "./audio/tick.mp3"
 
 # imports
 from random import randint, shuffle, choice
@@ -102,22 +99,22 @@ if (RPi):
 def genSerial():
     # set the digits (used in the toggle switches phase)
     serial_digits = []
-    toggle_value = randint(1, 15)
+    jumper_value = randint(1, 31)
     # the sum of the digits is the toggle value
-    while (len(serial_digits) < 5 or toggle_value - sum(serial_digits) > 0):
-        d = randint(0, min(5, toggle_value - sum(serial_digits)))
+    while (len(serial_digits) < 5 or jumper_value - sum(serial_digits) > 0):
+        d = randint(0, min(5, jumper_value - sum(serial_digits)))
         serial_digits.append(d)
 
     # set the letters (used in the jumper wires phase)
-    jumper_indexes = [ 0 ] * 5
-    while (sum(jumper_indexes) < 3):
-        jumper_indexes[randint(0, len(jumper_indexes) - 1)] = 1
-    jumper_value = int("".join([ str(n) for n in jumper_indexes ]), 2)
+    toggle_indexes = [ 0 ] * 4
+    while (sum(toggle_indexes) < 3):
+        toggle_indexes[randint(0, len(toggle_indexes) - 1)] = 1
+    toggle_value = int("".join([ str(n) for n in toggle_indexes ]), 2)
     # the letters indicate which jumper wires must be "cut"
-    jumper_letters = [ chr(i + 65) for i, n in enumerate(jumper_indexes) if n == 1 ]
+    toggle_letters = [ chr(i + 65) for i, n in enumerate(toggle_indexes) if n == 1 ]
 
     # form the serial number
-    serial = [ str(d) for d in serial_digits ] + jumper_letters
+    serial = [ str(d) for d in serial_digits ] + toggle_letters
     # and shuffle it
     shuffle(serial)
     # finally, add a final letter (F..Z)
