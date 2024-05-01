@@ -5,7 +5,7 @@
 #################################
 
 # import the configs
-from OUrConfigs import *
+from Bomb.Ourbomb.OUrConfigs import *
 # other imports
 from tkinter import *
 import tkinter
